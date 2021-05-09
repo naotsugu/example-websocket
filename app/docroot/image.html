@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image</title>
+</head>
+<body>
+<img id="img">
+<br>
+<p>Press ← ↑ → ↓</p>
+<script>
+const socket = new WebSocket('ws://localhost:8025/websockets/image');
+socket.addEventListener('message', (event) => {
+    const url = window.URL || window.webkitURL;
+    document.getElementById('img').src = url.createObjectURL(event.data);
+});
+
+document.addEventListener('keydown', (event) => {
+    socket.send(event.keyCode);
+});
+</script>
+
+</body>
+</html>

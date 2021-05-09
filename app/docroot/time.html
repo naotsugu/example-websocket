@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Time</title>
+</head>
+<body>
+
+<h3>Time</h3>
+<p id="msg"></p>
+
+<script>
+const socket = new WebSocket('ws://localhost:8025/websockets/time');
+socket.addEventListener('message', (event) =>
+    document.getElementById('msg').textContent = event.data);
+</script>
+
+</body>
+</html>
