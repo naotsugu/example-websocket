@@ -1,6 +1,5 @@
 package com.mammb.code.example.websocket;
 
-import jakarta.websocket.OnClose;
 import jakarta.websocket.OnMessage;
 import jakarta.websocket.OnOpen;
 import jakarta.websocket.Session;
@@ -11,28 +10,19 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @ServerEndpoint("/image")
 public class ImageEndPoint {
 
-    private static final Map<Session, Point> sessions = new ConcurrentHashMap<>();
-
     @OnOpen
     public void onOpen(Session session) {
-        sessions.put(session, new Point());
+        session.getUserProperties().put("point", new Point());
         onMessage("", session);
-    }
-
-    @OnClose
-    public void onClose(Session session) {
-        sessions.remove(session);
     }
 
     @OnMessage
     public void onMessage(String message, Session session) {
-        Point point = sessions.get(session);
+        Point point = (Point) session.getUserProperties().get("point");
         switch (message) {
             case "37" -> point.x -= 4; // left arrow
             case "38" -> point.y -= 4; // up arrow

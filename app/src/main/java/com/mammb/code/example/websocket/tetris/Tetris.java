@@ -106,17 +106,17 @@ public class Tetris {
             }
             newY--;
         }
-        pieceDropped();
+        blockDropped();
     }
 
     private void oneLineDown() {
         if (!tryMove(curBlock, curX, curY - 1)) {
-            pieceDropped();
+            blockDropped();
         }
     }
 
 
-    private void pieceDropped() {
+    private void blockDropped() {
         for (int i = 0; i < 4; i++) {
             int x = curX + curBlock.x(i);
             int y = curY - curBlock.y(i);

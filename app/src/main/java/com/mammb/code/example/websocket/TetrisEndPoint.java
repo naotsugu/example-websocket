@@ -17,8 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class TetrisEndPoint {
 
     private static final Map<Session, Tetris> sessions = new ConcurrentHashMap<>();
-
-    public TetrisEndPoint() {
+    static {
         Runnable command = () -> sessions.entrySet().forEach(s -> {
             Tetris tetris = s.getValue();
             synchronized (tetris) {
@@ -30,7 +29,7 @@ public class TetrisEndPoint {
             }
         });
         Executors.newSingleThreadScheduledExecutor()
-                .scheduleWithFixedDelay(command, 0, 500, TimeUnit.MILLISECONDS);
+            .scheduleWithFixedDelay(command, 0, 500, TimeUnit.MILLISECONDS);
     }
 
     @OnOpen
@@ -48,7 +47,7 @@ public class TetrisEndPoint {
         Tetris tetris = sessions.get(session);
         synchronized (tetris) {
             if (!tetris.isStarted()) {
-                if (message.equals("83")) { // s
+                if (message.equals("83")) { // s:start
                     tetris.start();
                 }
             } else {

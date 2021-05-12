@@ -15,12 +15,11 @@ import java.util.concurrent.TimeUnit;
 public class TimeEndPoint {
 
     private static final Queue<Session> sessions = new ConcurrentLinkedQueue<>();
-
-    public TimeEndPoint() {
+    static {
         Runnable command = () -> sessions.forEach(session ->
-                session.getAsyncRemote().sendText(LocalDateTime.now().toString()));
+            session.getAsyncRemote().sendText(LocalDateTime.now().toString()));
         Executors.newSingleThreadScheduledExecutor()
-                .scheduleWithFixedDelay(command, 1, 1, TimeUnit.SECONDS);
+            .scheduleWithFixedDelay(command, 1, 1, TimeUnit.SECONDS);
     }
 
     @OnOpen
