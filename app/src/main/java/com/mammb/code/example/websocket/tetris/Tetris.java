@@ -26,14 +26,18 @@ public class Tetris {
     public Tetris() {
         stopped = true;
         board = new Tetrominoe[BOARD_WIDTH * BOARD_HEIGHT];
+        for (int i = 0; i < BOARD_HEIGHT * BOARD_WIDTH; i++) {
+            board[i] = Tetrominoe.NoShape;
+        }
+        curBlock = Block.empty;
         img = new BufferedImage(
                 UNIT_SIZE * BOARD_WIDTH,
                 UNIT_SIZE * BOARD_HEIGHT,
                 BufferedImage.TYPE_INT_BGR);
+        draw();
     }
 
     public void start() {
-        board = new Tetrominoe[BOARD_WIDTH * BOARD_HEIGHT];
         for (int i = 0; i < BOARD_HEIGHT * BOARD_WIDTH; i++) {
             board[i] = Tetrominoe.NoShape;
         }
@@ -133,7 +137,7 @@ public class Tetris {
         curX = BOARD_WIDTH / 2 + 1;
         curY = BOARD_HEIGHT - 1 + curBlock.minY();
         if (!tryMove(curBlock, curX, curY)) {
-            curBlock.setType(Tetrominoe.NoShape);
+            curBlock = Block.empty;
             stopped = true;
         }
     }
@@ -184,7 +188,7 @@ public class Tetris {
         if (completeLineCount > 0) {
             score += completeLineCount * completeLineCount * 100L;
             isFallingFinished = true;
-            curBlock.setType(Tetrominoe.NoShape);
+            curBlock = Block.empty;
         }
     }
 

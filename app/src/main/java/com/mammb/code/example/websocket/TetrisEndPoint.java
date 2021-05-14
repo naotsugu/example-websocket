@@ -11,15 +11,17 @@ import java.io.OutputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @ServerEndpoint("/tetris")
 public class TetrisEndPoint {
 
     private static final Map<Session, Tetris> sessions = new ConcurrentHashMap<>();
+    private static final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     static {
         Runnable command = () -> sessions.entrySet().forEach(s -> {
-            Tetris tetris = s.getValue();
+            final Tetris tetris = s.getValue();
             synchronized (tetris) {
                 if (!tetris.isStarted()) {
                     return;
@@ -28,13 +30,14 @@ public class TetrisEndPoint {
                 TetrisEndPoint.send(s.getKey(), tetris);
             }
         });
-        Executors.newSingleThreadScheduledExecutor()
-            .scheduleWithFixedDelay(command, 0, 500, TimeUnit.MILLISECONDS);
+        executor.scheduleWithFixedDelay(command, 0, 500, TimeUnit.MILLISECONDS);
     }
 
     @OnOpen
     public void onOpen(Session session) {
-        sessions.put(session, new Tetris());
+        final Tetris tetris = new Tetris();
+        sessions.put(session, tetris);
+        send(session, tetris);
     }
 
     @OnClose

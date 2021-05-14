@@ -2,6 +2,8 @@ package com.mammb.code.example.websocket.tetris;
 
 public class Block {
 
+    public static final Block empty = new Block(Tetrominoe.NoShape);
+
     private Tetrominoe type;
     private final int points[][];
 
@@ -52,9 +54,9 @@ public class Block {
         return type;
     }
 
-    public void setType(Tetrominoe type)  {
-        this.type = type;
-    }
+//    public void setType(Tetrominoe type)  {
+//        this.type = type;
+//    }
 
     private void setX(int index, int x) {
         points[index][0] = x;
