@@ -11,5 +11,5 @@ $ ./gradlew run
 
 Build is executed, the browser will be launched, and the application will start.
 
-![tetris](doc/images/tetris.png)
+![tetris](doc/images/tetris.gif)
 

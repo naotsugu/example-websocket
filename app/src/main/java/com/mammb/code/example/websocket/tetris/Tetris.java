@@ -21,13 +21,12 @@ public class Tetris {
 
     private long score;
     private boolean stopped;
-    private boolean isFallingFinished = false;
 
     public Tetris() {
         stopped = true;
         board = new Tetrominoe[BOARD_WIDTH * BOARD_HEIGHT];
         for (int i = 0; i < BOARD_HEIGHT * BOARD_WIDTH; i++) {
-            board[i] = Tetrominoe.NoShape;
+            board[i] = Tetrominoe.X;
         }
         curBlock = Block.empty;
         img = new BufferedImage(
@@ -39,7 +38,7 @@ public class Tetris {
 
     public void start() {
         for (int i = 0; i < BOARD_HEIGHT * BOARD_WIDTH; i++) {
-            board[i] = Tetrominoe.NoShape;
+            board[i] = Tetrominoe.X;
         }
         score = 0;
         stopped = false;
@@ -52,7 +51,7 @@ public class Tetris {
     }
 
     public void keyPressed(int keycode) {
-        if (curBlock.getType() == Tetrominoe.NoShape || stopped) {
+        if (curBlock.getType() == Tetrominoe.X || stopped) {
             return;
         }
         switch (keycode) {
@@ -81,13 +80,13 @@ public class Tetris {
         for (int i = 0; i < BOARD_HEIGHT; i++) {
             for (int j = 0; j < BOARD_WIDTH; j++) {
                 Tetrominoe shape = shapeAt(j, BOARD_HEIGHT - i - 1);
-                if (shape != Tetrominoe.NoShape) {
+                if (shape != Tetrominoe.X) {
                     drawSquare(g, j * UNIT_SIZE,
                             i * UNIT_SIZE, shape);
                 }
             }
         }
-        if (curBlock.getType() != Tetrominoe.NoShape) {
+        if (curBlock.getType() != Tetrominoe.X) {
             for (int i = 0; i < 4; i++) {
                 int x = curX + curBlock.x(i);
                 int y = curY - curBlock.y(i);
@@ -119,7 +118,6 @@ public class Tetris {
         }
     }
 
-
     private void blockDropped() {
         for (int i = 0; i < 4; i++) {
             int x = curX + curBlock.x(i);
@@ -127,7 +125,7 @@ public class Tetris {
             board[(y * BOARD_WIDTH) + x] = curBlock.getType();
         }
         removeCompleteLines();
-        if (!isFallingFinished) {
+        if (curBlock == Block.empty) {
             newPiece();
         }
     }
@@ -149,7 +147,7 @@ public class Tetris {
             if (x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT) {
                 return false;
             }
-            if (shapeAt(x, y) != Tetrominoe.NoShape) {
+            if (shapeAt(x, y) != Tetrominoe.X) {
                 return false;
             }
         }
@@ -169,7 +167,7 @@ public class Tetris {
         for (int i = BOARD_HEIGHT - 1; i >= 0; i--) {
             boolean complete = true;
             for (int j = 0; j < BOARD_WIDTH; j++) {
-                if (shapeAt(j, i) == Tetrominoe.NoShape) {
+                if (shapeAt(j, i) == Tetrominoe.X) {
                     complete = false;
                     break;
                 }
@@ -187,9 +185,8 @@ public class Tetris {
 
         if (completeLineCount > 0) {
             score += completeLineCount * completeLineCount * 100L;
-            isFallingFinished = true;
-            curBlock = Block.empty;
         }
+        curBlock = Block.empty;
     }
 
     private void drawSquare(Graphics g, int x, int y, Tetrominoe shape) {
@@ -210,8 +207,7 @@ public class Tetris {
 
 
     private void update() {
-        if (isFallingFinished) {
-            isFallingFinished = false;
+        if (curBlock == Block.empty) {
             newPiece();
         } else {
             oneLineDown();

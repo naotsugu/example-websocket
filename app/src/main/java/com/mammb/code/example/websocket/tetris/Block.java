@@ -2,7 +2,7 @@ package com.mammb.code.example.websocket.tetris;
 
 public class Block {
 
-    public static final Block empty = new Block(Tetrominoe.NoShape);
+    public static final Block empty = new Block(Tetrominoe.X);
 
     private Tetrominoe type;
     private final int points[][];
@@ -17,7 +17,7 @@ public class Block {
     }
 
     public Block rotateLeft() {
-        if (type == Tetrominoe.SqShape) {
+        if (!type.isRotatable()) {
             return this;
         }
         var result = new Block(type);
@@ -29,7 +29,7 @@ public class Block {
     }
 
     public Block rotateRight() {
-        if (type == Tetrominoe.SqShape) {
+        if (!type.isRotatable()) {
             return this;
         }
 
@@ -53,10 +53,6 @@ public class Block {
     public Tetrominoe getType()  {
         return type;
     }
-
-//    public void setType(Tetrominoe type)  {
-//        this.type = type;
-//    }
 
     private void setX(int index, int x) {
         points[index][0] = x;
